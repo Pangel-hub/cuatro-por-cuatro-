@@ -1,0 +1,81 @@
+{
+  "fuente": "Caso 4: Capa a Capa, Parte 2, páginas 29–30",
+  "muestreo": {
+    "trabajo_manual": 104,
+    "espera_impresion": 84,
+    "busqueda_insumos": 12,
+    "total": 200
+  },
+  "personas": [
+    {
+      "id": "P1",
+      "altura_codo_cm": 96,
+      "alcance_comodo_cm": 38
+    },
+    {
+      "id": "P2",
+      "altura_codo_cm": 101,
+      "alcance_comodo_cm": 42
+    },
+    {
+      "id": "P3",
+      "altura_codo_cm": 106,
+      "alcance_comodo_cm": 46
+    },
+    {
+      "id": "P4",
+      "altura_codo_cm": 111,
+      "alcance_comodo_cm": 50
+    }
+  ],
+  "ergonomia": {
+    "mesa_fija_cm": 100,
+    "mesa_ajustable_cm": [
+      92,
+      108
+    ],
+    "bandeja_actual_cm": 52,
+    "bandeja_propuesta_cm": 35,
+    "superficie_bajo_codo_cm": [
+      2,
+      8
+    ]
+  },
+  "biomecanica": {
+    "masa_kg": 1,
+    "gravedad_m_s2": 9.81,
+    "distancias_m": [
+      0.4,
+      0.2
+    ]
+  },
+  "produccion": {
+    "tamano_lote": 4,
+    "ciclo_min": 16,
+    "alternativas": {
+      "A": {
+        "impresoras": 2,
+        "L": 4,
+        "U": 2,
+        "F": 2,
+        "inversion_um": 0
+      },
+      "B": {
+        "impresoras": 2,
+        "L": 2,
+        "U": 2,
+        "F": 2,
+        "inversion_um": 360
+      },
+      "C": {
+        "impresoras": 3,
+        "L": 4,
+        "U": 2,
+        "F": 2,
+        "inversion_um": 1200
+      }
+    },
+    "sesiones": 20,
+    "contribucion_por_pieza_um": 12
+  }
+}
