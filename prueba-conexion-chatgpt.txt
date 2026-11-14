@@ -1,0 +1,1 @@
+Prueba de acceso de escritura para verificar el conector de ChatGPT Codex.
