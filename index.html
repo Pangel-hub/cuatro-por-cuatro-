@@ -81,7 +81,8 @@ function simulate(o){
  let guard=0;
  while(finished<need&&guard++<1000){
    const m=machines[visit%machines.length];visit++;
-   if(m.lot===null){if(started>=need&&machines.every(x=>x.lot===null))break;continue}
+   if(machines.every(x=>x.lot===null))break;
+   if(m.lot===null){continue}
    const lot=m.lot,waitStart=cursor;if(cursor<m.ready){pEvent("wait","Espera "+m.id,cursor,m.ready,lot);cursor=m.ready}
    const unloadStart=cursor,unloadEnd=unloadStart+c.U;
    // Al descargar, evaluar la recarga desde el instante posterior a la descarga.
@@ -102,7 +103,8 @@ function simulate(o){
      if(e.type==="unload"&&e.s>busyEnd)expanded.push({type:"pending",label:"Pendiente L"+e.lot,s:busyEnd,e:e.s});
      expanded.push(e);busyEnd=Math.max(busyEnd,e.e);
    }
-   if(busyEnd<o.H)expanded.push({type:"free",label:"Libre",s:busyEnd,e:o.H});
+   if(m.lot!==null){if(m.ready<o.H)expanded.push({type:"pending",label:"Pendiente de descarga",s:Math.max(busyEnd,m.ready),e:o.H});}
+   else if(busyEnd<o.H)expanded.push({type:"free",label:"Libre",s:busyEnd,e:o.H});
    m.events=expanded;
  }
  // Check person tasks do not overlap.
@@ -111,7 +113,7 @@ function simulate(o){
  return {machines,person,started,finished,pieces:finished*4,missing:Math.max(0,o.D-finished*4),manual,last,productivity:o.H>0?finished*4/(o.H/60):0};
 }
 function gantt(r,H){const rows=[{name:"Persona",events:r.person},...r.machines.map(m=>({name:m.id,events:m.events}))];$("gantt").innerHTML=rows.map(row=>'<div class="gantt-row"><div class="gantt-name">'+row.name+'</div><div class="track">'+row.events.map(e=>{const cls=e.type==="auto"?"auto":e.type==="wait"?"wait":e.type==="pending"?"pending":e.type==="free"?"free":"load";return '<div class="seg '+cls+'" title="'+e.label+' · '+e.s+'–'+e.e+' min" style="left:'+(H?e.s/H*100:0)+'%;width:'+Math.max(.5,(e.e-e.s)/(H||1)*100)+'%">'+e.label+'</div>'}).join("")+'</div></div>').join("")||"No hay eventos."}
-function run(){try{const o={alt:$("alt").value,H:+$("H").value,D:+$("D").value,T:+$("T").value},r=simulate(o);$("err").textContent="";$("simKpis").innerHTML=kpi("Lotes iniciados",r.started)+kpi("Lotes terminados",r.finished)+kpi("Piezas buenas",r.pieces)+kpi("Faltantes",r.missing)+kpi("Último acabado",r.last===null?"—":r.last+" min")+kpi("Ocupación manual",r.manual+" min")+kpi("Productividad",r.productivity.toFixed(2)+" pzas/h-persona")+kpi("Demanda",r.missing===0?"Cumple":"No cumple");gantt(r,o.H);$("printerZone").innerHTML=cfg[o.alt].n===3?"M1 · M2 · M3<small>Impresoras</small>":"M1 · M2<small>Impresoras</small>";
+function run(){try{const o={alt:$("alt").value,H:+$("H").value,D:+$("D").value,T:+$("T").value},r=simulate(o);$("err").textContent="";$("simKpis").innerHTML=kpi("Lotes iniciados",r.started)+kpi("Lotes terminados",r.finished)+kpi("Piezas buenas",r.pieces)+kpi("Faltantes",r.missing)+kpi("Último acabado",r.last===null?"—":r.last+" min")+kpi("TE manual por lote",(cfg[o.alt].L+cfg[o.alt].U+cfg[o.alt].F)+" min")+kpi("Ocupación manual",r.manual+" min")+kpi("Productividad",r.productivity.toFixed(2)+" pzas/h-persona")+kpi("Demanda",r.missing===0?"Cumple":"No cumple");gantt(r,o.H);$("printerZone").innerHTML=cfg[o.alt].n===3?"M1 · M2 · M3<small>Impresoras</small>":"M1 · M2<small>Impresoras</small>";
  const base=simulate({alt:"A",H:o.H,D:o.D,T:o.T});$("econ").innerHTML='<tr><th>Alternativa</th><th>Piezas</th><th>Extra vs A</th><th>Inversión</th><th>Neto incremental</th></tr>'+["A","B","C"].map(a=>{const x=simulate({alt:a,H:o.H,D:o.D,T:o.T}),extra=x.pieces-base.pieces,contrib=extra*20*12,net=contrib-cfg[a].inv;return '<tr><td>'+a+'</td><td>'+x.pieces+'</td><td>'+extra+'</td><td>'+cfg[a].inv.toLocaleString("es-MX")+'</td><td>'+net.toLocaleString("es-MX")+' u. m.</td></tr>'}).join("");
  }catch(e){$("err").textContent=e.message;$("simKpis").innerHTML="";$("gantt").innerHTML="";$("econ").innerHTML=""}}
 function tests(){$("tests").innerHTML='<tr><th>Prueba</th><th>Entradas</th><th>Referencia manual</th><th>Estado</th></tr>'+[['I','A · H=24 · D=4 · T=16','Pendiente de registro independiente del equipo'],['II','A · H=23 · D=4 · T=16','Pendiente de registro independiente del equipo'],['III','A · H=30 · D=8 · T=16','Pendiente de registro independiente del equipo'],['Frontera','H=0','Verificar cero producción'],['Inválida','Demanda=6','Debe rechazarse'],['No factible','A · H=1 · D=40','Debe reportar faltantes'],['Solapamiento','Actividades manuales','No debe existir']].map(x=>'<tr><td>'+x[0]+'</td><td>'+x[1]+'</td><td>'+x[2]+'</td><td>Pendiente de revisión por otro integrante</td></tr>').join("")}
