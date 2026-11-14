@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Aplicación didáctica del Caso 4 Capa a Capa, Parte 2">
+<title>Capa a Capa | Caso 4 · Parte 2</title>
+<style>
+:root{--navy:#142c49;--blue:#2762a5;--teal:#16877b;--gold:#df9a2e;--red:#b84752;--ink:#1d2b3d;--muted:#62738a;--line:#dce4ee;--bg:#f2f5f9;--card:#fff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.hero{background:linear-gradient(120deg,#112844,#245b91);color:#fff;padding:34px max(4vw,18px);display:flex;align-items:center;justify-content:space-between;gap:18px}
+.hero h1{font-size:clamp(30px,5vw,48px);margin:4px 0}.hero p{margin:0;color:#d9e6f4}.eyebrow{font-size:11px;letter-spacing:.13em;font-weight:800;color:#b9d2ed}.pill{border:1px solid #7e9bb8;border-radius:22px;padding:8px 13px;font-size:13px}
+nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);display:flex;gap:5px;padding:9px 4vw;overflow:auto}
+nav a{white-space:nowrap;text-decoration:none;color:#38516e;padding:8px 11px;border-radius:8px;font-size:13px}nav a:hover{background:#eaf1fa}
+main{max-width:1160px;margin:24px auto;padding:0 18px}.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin:18px 0;box-shadow:0 6px 24px #203b5a0b;scroll-margin-top:80px}
+.intro{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}.tag{font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--blue)}
+h2{margin:5px 0 10px;font-size:25px}h3{font-size:17px;margin:22px 0 9px}.muted,.small{color:var(--muted)}.small{font-size:12px}
+.callout,.note{background:#f0f5fb;border-left:4px solid var(--blue);padding:13px 15px;border-radius:9px}.callout p,.note p{margin:5px 0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:11px;margin:16px 0}.kpi{background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:13px}.kpi strong{display:block;font-size:25px;color:var(--navy)}.kpi span{font-size:12px;color:var(--muted)}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:15px 0}.controls label{font-size:13px;font-weight:650;color:#42536a}
+.controls input,.controls select{display:block;width:100%;margin-top:5px;border:1px solid #cbd6e3;border-radius:9px;padding:10px;background:#fff;font:inherit;color:var(--ink)}
+button{border:0;background:var(--blue);color:#fff;padding:11px 15px;border-radius:9px;font-weight:700;cursor:pointer;align-self:end}button.secondary{background:#e8eef6;color:#203c5f}button:hover{filter:brightness(.96)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#edf3f9;color:#294866}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}
+.barline{height:11px;background:#e8edf3;border-radius:10px;overflow:hidden;min-width:90px}.barline i{display:block;height:100%;background:var(--teal)}
+.error{color:#9c2635;font-weight:650;min-height:22px}.ok{color:#13725e;font-weight:700}.status{padding:9px 12px;border-radius:8px;background:#f6f2e7;color:#815c16;font-size:13px}
+.layout{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0}.zone{border:1px solid #b9cbdd;border-radius:10px;min-height:90px;padding:12px 7px;text-align:center;background:#edf4fb;font-weight:750}
+.zone small{display:block;font-size:11px;font-weight:500;color:var(--muted)}.zone:nth-child(2){background:#fff5df}.zone:nth-child(3){background:#e9f4ff}.zone:nth-child(4){background:#e8f7f3}.zone:nth-child(5){background:#f0ecfb}.route{text-align:center;color:var(--blue);font-weight:700}
+.gantt{overflow-x:auto;border:1px solid var(--line);border-radius:10px;padding:10px}.gantt-row{display:grid;grid-template-columns:100px minmax(650px,1fr);gap:8px;align-items:center;margin:7px 0}
+.gantt-name{font-size:12px;font-weight:750}.track{height:35px;background:repeating-linear-gradient(90deg,#f5f7fa 0,#f5f7fa calc(10% - 1px),#dce4ed calc(10% - 1px),#dce4ed 10%);position:relative;border:1px solid #dce4ed;border-radius:5px;min-width:650px}
+.seg{position:absolute;top:2px;height:29px;border-radius:4px;overflow:hidden;padding:3px 4px;font-size:10px;white-space:nowrap;text-overflow:ellipsis;color:#142b43}
+.load,.unload,.finish{background:#f6c7d1}.auto{background:#9ed5f6}.wait{background:#c9c2f3}.pending{background:repeating-linear-gradient(135deg,#eee,#eee 5px,#d7d7d7 5px,#d7d7d7 9px)}.free{background:#e4e7eb}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin:9px 0}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px}
+footer{text-align:center;color:var(--muted);padding:25px 0;font-size:12px}
+@media(max-width:720px){.hero{display:block}.pill{display:inline-block;margin-top:14px}.intro,.two{grid-template-columns:1fr}.layout{grid-template-columns:repeat(2,1fr)}.panel{padding:17px}nav{padding-left:10px}.gantt-row{grid-template-columns:76px minmax(650px,1fr)}}
+</style>
+</head>
+<body>
+<header class="hero"><div><div class="eyebrow">ESTUDIO Y DISEÑO DEL TRABAJO · CASO 4</div><h1>Capa a Capa</h1><p>Ergonomía, muestreo y simulación de alternativas de producción</p></div><div class="pill">Parte 2 · Semanas 8–11</div></header>
+<nav><a href="#inicio">Resumen</a><a href="#muestreo">Muestreo</a><a href="#ergonomia">Ergonomía</a><a href="#biomecanica">Biomecánica</a><a href="#rediseno">Rediseño</a><a href="#simulador">Simulador</a><a href="#validacion">Pruebas</a></nav>
+<main>
+<section class="panel intro" id="inicio"><div><span class="tag">PROPÓSITO</span><h2>Herramienta de análisis del Caso 4</h2><p>Analiza los estados observados, condiciones antropométricas del puesto y producción terminada en las alternativas A, B y C. Los datos son sintéticos y didácticos, tal como se presentan en la ficha.</p></div><div class="callout"><b>Alcance y límites</b><p>No diagnostica salud ni certifica normas. El rediseño es una propuesta pendiente de prueba. La simulación reproduce la política de despacho del caso; no es un optimizador universal. La validación académica requiere referencias manuales independientes.</p></div></section>
+
+<section class="panel" id="muestreo"><span class="tag">MÓDULO 01</span><h2>Muestreo del trabajo</h2><p>Piloto de 200 observaciones instantáneas aleatorias dentro de ventanas netas.</p><div id="sampleKpis" class="kpis"></div><div class="table-wrap"><table id="sampleTable"></table></div><div class="note"><b>Interpretación.</b> La espera de impresión no equivale necesariamente a inactividad humana: durante el ciclo automático la persona puede atender otra tarea. La búsqueda puede orientar una mejora de organización, pero el 6 % no demuestra qué parte es evitable ni se convierte en suplemento del tiempo estándar.</div><h3>Propuesta de nuevo muestreo</h3><p>Distribuir instantes aleatorios entre varias sesiones y distintos tramos horarios; registrar sesión, franja y estado observado. Evitar concentrar observaciones en una sola hora. Justificar el tamaño final con el método visto en clase.</p></section>
+
+<section class="panel" id="ergonomia"><span class="tag">MÓDULO 02</span><h2>Antropometría y ergonomía</h2><p>Criterio didáctico: la superficie queda entre 2 y 8 cm por debajo del codo. No es una norma universal.</p><div class="controls"><label>Mesa fija (cm)<input id="fixed" type="number" value="100"></label><label>Ajuste mínimo (cm)<input id="amin" type="number" value="92"></label><label>Ajuste máximo (cm)<input id="amax" type="number" value="108"></label><label>Bandeja actual (cm)<input id="tray1" type="number" value="52"></label><label>Bandeja propuesta (cm)<input id="tray2" type="number" value="35"></label></div><div id="ergoKpis" class="kpis"></div><div class="table-wrap"><table id="ergoTable"></table></div><p class="small">La cobertura se evalúa persona por persona. Cuatro perfiles no permiten inferir percentiles poblacionales.</p></section>
+
+<section class="panel" id="biomecanica"><span class="tag">MÓDULO 03</span><h2>Biomecánica: momento de fuerza</h2><p>Modelo didáctico: M = masa × 9.81 × distancia. No implica evaluación clínica ni límites seguros.</p><div class="controls"><label>Masa (kg)<input id="mass" type="number" value="1" min=".01" step=".1"></label><label>Distancia A (m)<input id="dA" type="number" value=".4" min="0" step=".01"></label><label>Distancia B (m)<input id="dB" type="number" value=".2" min="0" step=".01"></label></div><div id="momentKpis" class="kpis"></div><div id="momentText" class="note"></div></section>
+
+<section class="panel" id="rediseno"><span class="tag">MÓDULO 04</span><h2>Rediseño conceptual del puesto</h2><p>Propuesta: mesa ajustable, bandeja de insumos dentro del alcance cómodo, preparación de kits, impresoras, inspección/embalaje y salida. Los beneficios operativos son hipótesis pendientes de medición.</p><div class="layout"><div class="zone">Mesa K<small>Preparar kits</small></div><div class="zone">Insumos<small>Bandeja cercana</small></div><div class="zone" id="printerZone">M1 · M2<small>Impresoras</small></div><div class="zone">Mesa V<small>Inspección y embalaje</small></div><div class="zone">Salida<small>Lote terminado</small></div></div><div class="route">Recorrido conceptual: K → impresora → V → salida</div><div class="two"><div><h3>Situación de referencia</h3><ul><li>Mesa fija de 100 cm para la comparación del ejercicio.</li><li>Bandeja de materiales a 52 cm.</li></ul></div><div><h3>Cambio propuesto</h3><ul><li>Mesa ajustable de 92–108 cm.</li><li>Bandeja a 35 cm.</li><li>Validar con usuarios antes de afirmar ahorros.</li></ul></div></div></section>
+
+<section class="panel" id="simulador"><span class="tag">MÓDULO 05</span><h2>Simulador de producción A / B / C</h2><p>Unidad: lote indivisible de 4 piezas buenas. Ciclo automático base: 16 minutos por lote.</p>
+<div class="controls"><label>Alternativa<select id="alt"><option value="A">A · Método actual</option><option value="B">B · Plantilla de kits</option><option value="C">C · Tercera impresora</option></select></label><label>Horizonte H (min)<input id="H" type="number" min="0" max="120" value="100"></label><label>Demanda (piezas; múltiplo de 4)<input id="D" type="number" min="0" step="4" value="40"></label><label>Ciclo automático (min)<input id="T" type="number" min="12" max="20" value="16"></label><button id="reset" class="secondary">Restablecer base</button><button id="go">Calcular</button></div>
+<div id="err" class="error" role="alert"></div><div id="simKpis" class="kpis"></div><div class="two"><div><h3>Comparación económica</h3><div class="table-wrap"><table id="econ"></table></div><p class="small">20 sesiones × 12 u. m. por pieza adicional respecto de A, menos inversión. El tiempo libre no se monetiza.</p></div><div><h3>Regla de despacho</h3><div class="note">Carga inicial M1, M2 y M3 en orden. Visitas cíclicas M1–M2–M3; espera si la máquina sigue imprimiendo; descarga; recarga si procede; termina el lote descargado inmediatamente después de la eventual recarga. Un lote cuenta únicamente tras descarga y acabado dentro de H.</div></div></div>
+<h3>Cronograma persona–máquinas</h3><div id="gantt" class="gantt"></div><div class="legend"><span><i class="load"></i>Carga/descarga/acabado</span><span><i class="auto"></i>Impresión</span><span><i class="wait"></i>Espera de persona</span><span><i class="pending"></i>Impresión terminada pendiente de descarga</span><span><i class="free"></i>Libre</span></div></section>
+
+<section class="panel" id="validacion"><span class="tag">MÓDULO 06</span><h2>Pruebas y conciliación</h2><div class="status">Las tres pruebas cortas requieren una derivación manual independiente del equipo antes de considerarse validadas académicamente.</div><div class="table-wrap"><table id="tests"></table></div><p class="small">La matriz de pruebas conserva el espacio de registro manual, salida de la aplicación, diferencia, tolerancia, estado y explicación. La salida del programa no sustituye el cálculo manual.</p></section>
+
+<section class="panel"><span class="tag">METODOLOGÍA</span><h2>Fórmulas y supuestos</h2><ul><li>Proporción = observaciones de la actividad ÷ 200 × 100.</li><li>Intervalo de mesa = altura del codo − 8 cm a altura del codo − 2 cm.</li><li>Momento = masa × 9.81 × distancia.</li><li>Una persona realiza como máximo una actividad manual a la vez.</li><li>El lote es indivisible; solo cuenta terminado tras descarga y acabado dentro del horizonte.</li></ul></section>
+<footer>Datos sintéticos para aprendizaje · Caso 4, Parte 2 · Modelo determinista y auditable</footer>
+</main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const people=[["P1",96,38],["P2",101,42],["P3",106,46],["P4",111,50]];
+const cfg={A:{n:2,L:4,U:2,F:2,inv:0},B:{n:2,L:2,U:2,F:2,inv:360},C:{n:3,L:4,U:2,F:2,inv:1200}};
+function kpi(label,value){return '<div class="kpi"><strong>'+value+'</strong><span>'+label+'</span></div>'}
+function sample(){const a=[["Trabajo manual de lote",104],["Espera de impresión",84],["Búsqueda de insumos",12]],total=200;$("sampleKpis").innerHTML=a.map(x=>kpi(x[0],(x[1]/total*100).toFixed(0)+"%")).join("")+kpi("Total",total);$("sampleTable").innerHTML='<tr><th>Actividad</th><th>Observaciones</th><th>Porcentaje</th><th>Distribución</th></tr>'+a.map(x=>'<tr><td>'+x[0]+'</td><td>'+x[1]+'</td><td>'+(x[1]/total*100).toFixed(1)+'%</td><td><div class="barline"><i style="width:'+(x[1]/total*100)+'%"></i></div></td></tr>').join("")}
+function ergo(){const fixed=+$("fixed").value,lo=+$("amin").value,hi=+$("amax").value,t1=+$("tray1").value,t2=+$("tray2").value;const rows=people.map(([p,e,r])=>{const mn=e-8,mx=e-2;return {p,e,r,mn,mx,fixed:fixed>=mn&&fixed<=mx,adj:lo<=mx&&hi>=mn,b1:t1<=r,b2:t2<=r}});$("ergoKpis").innerHTML=kpi("Mesa fija",rows.filter(x=>x.fixed).length+"/4")+kpi("Mesa ajustable",rows.filter(x=>x.adj).length+"/4")+kpi("Bandeja 52 cm",rows.filter(x=>x.b1).length+"/4")+kpi("Bandeja 35 cm",rows.filter(x=>x.b2).length+"/4");$("ergoTable").innerHTML='<tr><th>Persona</th><th>Altura codo</th><th>Alcance cómodo</th><th>Intervalo recomendado</th><th>Mesa fija</th><th>Ajustable</th><th>Bandeja 52</th><th>Bandeja 35</th></tr>'+rows.map(x=>'<tr><td>'+x.p+'</td><td>'+x.e+' cm</td><td>'+x.r+' cm</td><td>'+x.mn+'–'+x.mx+' cm</td><td>'+(x.fixed?'Sí':'No')+'</td><td>'+(x.adj?'Sí':'No')+'</td><td>'+(x.b1?'Dentro':'Fuera')+'</td><td>'+(x.b2?'Dentro':'Fuera')+'</td></tr>').join("")}
+function moment(){const m=+$("mass").value,a=+$("dA").value,b=+$("dB").value;if(!(m>0&&a>=0&&b>=0)){$("momentKpis").innerHTML="";$("momentText").textContent="Introduce una masa positiva y distancias no negativas.";return}const A=m*9.81*a,B=m*9.81*b;$("momentKpis").innerHTML=kpi("Momento A",A.toFixed(3)+" N·m")+kpi("Momento B",B.toFixed(3)+" N·m");$("momentText").textContent="A: "+m+" × 9.81 × "+a+" = "+A.toFixed(3)+" N·m. B: "+m+" × 9.81 × "+b+" = "+B.toFixed(3)+" N·m."}
+function simulate(o){
+ const c=cfg[o.alt];if(!c)throw Error("Selecciona una alternativa válida.");
+ if(!Number.isFinite(o.H)||o.H<0||o.H>120)throw Error("H debe estar entre 0 y 120 minutos.");
+ if(!Number.isInteger(o.D)||o.D<0||o.D%4!==0)throw Error("La demanda debe ser un entero no negativo y múltiplo de 4.");
+ if(!Number.isFinite(o.T)||o.T<12||o.T>20)throw Error("El ciclo automático debe estar entre 12 y 20 minutos.");
+ const machines=Array.from({length:c.n},(_,i)=>({id:"M"+(i+1),lot:null,ready:0,events:[]}));
+ const person=[];let cursor=0,started=0,finished=0,manual=0,last=null,visit=0,need=o.D/4;
+ function pEvent(type,label,s,e,lot){if(e>s){person.push({type,label,s,e,lot});if(["load","unload","finish"].includes(type))manual+=e-s}}
+ function mEvent(m,type,label,s,e,lot){if(e>s)m.events.push({type,label,s,e,lot})}
+ // Carga inicial secuencial, respetando M1-M2-M3.
+ for(const m of machines){if(started>=need)break;if(cursor+c.L+o.T+c.U+c.F>o.H)break;const lot=++started,s=cursor,e=s+c.L;pEvent("load","Carga L"+lot,s,e,lot);mEvent(m,"load","Carga L"+lot,s,e,lot);mEvent(m,"auto","Impresión L"+lot,e,e+o.T,lot);m.lot=lot;m.ready=e+o.T;cursor=e}
+ // Visitas cíclicas, incluida espera si la siguiente máquina aún imprime.
+ let guard=0;
+ while(finished<need&&guard++<1000){
+   const m=machines[visit%machines.length];visit++;
+   if(m.lot===null){if(started>=need&&machines.every(x=>x.lot===null))break;continue}
+   const lot=m.lot,waitStart=cursor;if(cursor<m.ready){pEvent("wait","Espera "+m.id,cursor,m.ready,lot);cursor=m.ready}
+   const unloadStart=cursor,unloadEnd=unloadStart+c.U;
+   // Al descargar, evaluar la recarga desde el instante posterior a la descarga.
+   const canReload=started<need&&(unloadEnd+c.L+o.T+c.U+c.F<=o.H);
+   if(unloadEnd>o.H)break;
+   pEvent("unload","Descarga "+m.id,unloadStart,unloadEnd,lot);mEvent(m,"unload","Descarga L"+lot,unloadStart,unloadEnd,lot);cursor=unloadEnd;
+   if(canReload){
+     const next=++started,loadEnd=cursor+c.L;pEvent("load","Recarga "+m.id+" · L"+next,cursor,loadEnd,next);mEvent(m,"load","Carga L"+next,cursor,loadEnd,next);mEvent(m,"auto","Impresión L"+next,loadEnd,loadEnd+o.T,next);m.lot=next;m.ready=loadEnd+o.T;cursor=loadEnd;
+   }else{m.lot=null;m.ready=cursor}
+   const fEnd=cursor+c.F;if(fEnd>o.H)break;pEvent("finish","Acabado L"+lot,cursor,fEnd,lot);cursor=fEnd;finished++;last=cursor;
+ }
+ // Add machine pending intervals between auto completion and physical unload, plus free intervals.
+ for(const m of machines){
+   const sorted=m.events.slice().sort((a,b)=>a.s-b.s);
+   const expanded=[];
+   let busyEnd=0;
+   for(const e of sorted){
+     if(e.type==="unload"&&e.s>busyEnd)expanded.push({type:"pending",label:"Pendiente L"+e.lot,s:busyEnd,e:e.s});
+     expanded.push(e);busyEnd=Math.max(busyEnd,e.e);
+   }
+   if(busyEnd<o.H)expanded.push({type:"free",label:"Libre",s:busyEnd,e:o.H});
+   m.events=expanded;
+ }
+ // Check person tasks do not overlap.
+ const tasks=person.filter(x=>["load","unload","finish"].includes(x.type)).sort((a,b)=>a.s-b.s);
+ for(let i=1;i<tasks.length;i++)if(tasks[i].s<tasks[i-1].e-1e-9)throw Error("El modelo detectó solapamiento manual.");
+ return {machines,person,started,finished,pieces:finished*4,missing:Math.max(0,o.D-finished*4),manual,last,productivity:o.H>0?finished*4/(o.H/60):0};
+}
+function gantt(r,H){const rows=[{name:"Persona",events:r.person},...r.machines.map(m=>({name:m.id,events:m.events}))];$("gantt").innerHTML=rows.map(row=>'<div class="gantt-row"><div class="gantt-name">'+row.name+'</div><div class="track">'+row.events.map(e=>{const cls=e.type==="auto"?"auto":e.type==="wait"?"wait":e.type==="pending"?"pending":e.type==="free"?"free":"load";return '<div class="seg '+cls+'" title="'+e.label+' · '+e.s+'–'+e.e+' min" style="left:'+(H?e.s/H*100:0)+'%;width:'+Math.max(.5,(e.e-e.s)/(H||1)*100)+'%">'+e.label+'</div>'}).join("")+'</div></div>').join("")||"No hay eventos."}
+function run(){try{const o={alt:$("alt").value,H:+$("H").value,D:+$("D").value,T:+$("T").value},r=simulate(o);$("err").textContent="";$("simKpis").innerHTML=kpi("Lotes iniciados",r.started)+kpi("Lotes terminados",r.finished)+kpi("Piezas buenas",r.pieces)+kpi("Faltantes",r.missing)+kpi("Último acabado",r.last===null?"—":r.last+" min")+kpi("Ocupación manual",r.manual+" min")+kpi("Productividad",r.productivity.toFixed(2)+" pzas/h-persona")+kpi("Demanda",r.missing===0?"Cumple":"No cumple");gantt(r,o.H);$("printerZone").innerHTML=cfg[o.alt].n===3?"M1 · M2 · M3<small>Impresoras</small>":"M1 · M2<small>Impresoras</small>";
+ const base=simulate({alt:"A",H:o.H,D:o.D,T:o.T});$("econ").innerHTML='<tr><th>Alternativa</th><th>Piezas</th><th>Extra vs A</th><th>Inversión</th><th>Neto incremental</th></tr>'+["A","B","C"].map(a=>{const x=simulate({alt:a,H:o.H,D:o.D,T:o.T}),extra=x.pieces-base.pieces,contrib=extra*20*12,net=contrib-cfg[a].inv;return '<tr><td>'+a+'</td><td>'+x.pieces+'</td><td>'+extra+'</td><td>'+cfg[a].inv.toLocaleString("es-MX")+'</td><td>'+net.toLocaleString("es-MX")+' u. m.</td></tr>'}).join("");
+ }catch(e){$("err").textContent=e.message;$("simKpis").innerHTML="";$("gantt").innerHTML="";$("econ").innerHTML=""}}
+function tests(){$("tests").innerHTML='<tr><th>Prueba</th><th>Entradas</th><th>Referencia manual</th><th>Estado</th></tr>'+[['I','A · H=24 · D=4 · T=16','Pendiente de registro independiente del equipo'],['II','A · H=23 · D=4 · T=16','Pendiente de registro independiente del equipo'],['III','A · H=30 · D=8 · T=16','Pendiente de registro independiente del equipo'],['Frontera','H=0','Verificar cero producción'],['Inválida','Demanda=6','Debe rechazarse'],['No factible','A · H=1 · D=40','Debe reportar faltantes'],['Solapamiento','Actividades manuales','No debe existir']].map(x=>'<tr><td>'+x[0]+'</td><td>'+x[1]+'</td><td>'+x[2]+'</td><td>Pendiente de revisión por otro integrante</td></tr>').join("")}
+["fixed","amin","amax","tray1","tray2"].forEach(id=>$(id).addEventListener("input",ergo));
+["mass","dA","dB"].forEach(id=>$(id).addEventListener("input",moment));
+$("go").addEventListener("click",run);$("reset").addEventListener("click",()=>{$("alt").value="A";$("H").value=100;$("D").value=40;$("T").value=16;run()});
+sample();ergo();moment();tests();run();
+</script></body></html>
