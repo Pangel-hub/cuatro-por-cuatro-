@@ -2,7 +2,7 @@
 
 Aplicación web didáctica para la Parte 2 del Caso 4. Incluye muestreo, ergonomía, biomecánica, propuesta conceptual de rediseño y simulador de producción A/B/C.
 
-## Ejecutar
+## Interfaz adaptable\nLa interfaz se adapta automáticamente a teléfono, tableta y escritorio mediante CSS responsive. En dispositivos estrechos, las tablas y el Gantt conservan desplazamiento horizontal localizado para mantener legibilidad.\n\n## Ejecutar
 Abre `index.html` en un navegador moderno. No requiere instalación, API, base de datos ni credenciales. Para publicar en GitHub Pages: Settings → Pages → Deploy from a branch → `main` → `/(root)`.
 
 ## Datos de entrada
